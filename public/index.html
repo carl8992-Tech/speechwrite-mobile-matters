@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f2430" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SW Matters" />
+  <title>SpeechWrite Matters</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <strong>SpeechWrite Matters</strong>
+        <span id="subtitle">Sign in to continue drafts on your phone</span>
+      </div>
+      <button type="button" class="ghost hidden" id="signOutBtn">Sign out</button>
+    </header>
+
+    <div id="status" class="status" role="status"></div>
+
+    <section id="loginView" class="card">
+      <h2>Sign in</h2>
+      <p class="empty">Same SpeechWrite / Scribe account. This is a separate test app — not the Chrome Companion.</p>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" placeholder="you@firm.com" />
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" />
+      <div id="mfaWrap" class="hidden">
+        <label for="mfa">Verification code</label>
+        <input id="mfa" type="text" inputmode="numeric" autocomplete="one-time-code" />
+      </div>
+      <p style="height:10px"></p>
+      <button type="button" class="primary" id="signInBtn">Sign in</button>
+    </section>
+
+    <section id="listView" class="card hidden">
+      <h2>Continue a draft</h2>
+      <div class="toolbar" style="margin-bottom:10px">
+        <button type="button" class="primary" id="refreshBtn">Refresh</button>
+      </div>
+      <div id="draftList" class="list"></div>
+    </section>
+
+    <section id="detailView" class="card hidden">
+      <button type="button" class="ghost" id="backBtn" style="padding-left:0">← Drafts</button>
+      <h1 class="detail-title" id="detailTitle">Draft</h1>
+      <p class="detail-sub" id="detailSub"></p>
+      <div class="tags" id="detailTags" style="flex-direction:row;margin-bottom:12px"></div>
+      <h2>Transcript</h2>
+      <div class="mono" id="detailTranscript">—</div>
+      <p style="height:10px"></p>
+      <a class="primary" id="openScribeBtn" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">Open in Scribe</a>
+    </section>
+  </div>
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
