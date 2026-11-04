@@ -57,18 +57,42 @@ function regionOf(code) {
   return REGIONS[key] || REGIONS.IE;
 }
 
+function useApiProxy() {
+  const host = location.hostname;
+  return host && host !== "localhost" && host !== "127.0.0.1";
+}
+
 async function api(url, token, options = {}) {
-  const res = await fetch(url, {
-    method: options.method || "GET",
-    headers: {
-      Accept: "application/json",
-      ...(token ? { Authorization: "Bearer " + token } : {}),
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
-      ...(options.headers || {}),
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    cache: "no-store",
-  });
+  let res;
+  if (useApiProxy()) {
+    // Cloudflare Pages Function avoids browser CORS on phone installs.
+    res = await fetch("/api/proxy", {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url,
+        method: options.method || "GET",
+        headers: {
+          ...(token ? { Authorization: "Bearer " + token } : {}),
+          ...(options.headers || {}),
+        },
+        body: options.body != null ? options.body : undefined,
+      }),
+      cache: "no-store",
+    });
+  } else {
+    res = await fetch(url, {
+      method: options.method || "GET",
+      headers: {
+        Accept: "application/json",
+        ...(token ? { Authorization: "Bearer " + token } : {}),
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(options.headers || {}),
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      cache: "no-store",
+    });
+  }
   const text = await res.text();
   let body = null;
   try { body = text ? JSON.parse(text) : null; } catch { body = text; }
